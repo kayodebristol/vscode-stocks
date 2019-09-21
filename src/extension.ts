@@ -176,7 +176,7 @@ async function fetchSymbols(symbols: string[]) {
 
     let url = `https://cloud.iexapis.com/v1/stock/market/batch?symbols=${symbols_others.join(
       ',',
-    )}&types=quote&token=${currentIEXCloudAPIKey}`;
+    )}&types=quote&displayPercent=true&token=${currentIEXCloudAPIKey}`;
     let response = await httpGet(url);
     responseObj = JSON.parse(response);
   }
@@ -213,15 +213,15 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const changeArrow: Array<string> = ['↑', '↓', '(unch)'];
   const changeIndex = change > 0 ? 0 : change < 0 ? 1 : 2;
 
-  item.text = `${symbol.toUpperCase()} $${price} ${
-    changeArrow[changeIndex]
-  } ${percent.toFixed(2)}%`;
+  item.text = `${symbol.toUpperCase()}: $${price} ${changeArrow[changeIndex]} ${
+    changeIndex !== 2 ? percent.toFixed(2) : '(unch)'
+  }%`;
   const config = vscode.workspace.getConfiguration();
   const useColors = config.get('vscode-stocks.useColors', false);
   const colorStyle = config.get('vscode-stocks.colorStyle', [
-    'red',
-    'green',
-    'white',
+    '#fd6e70', // red from Yahoo Finance
+    '#6cb33f', // green from Yahoo Finance
+    'white', // unchanged
   ]);
   if (useColors) {
     item.color = colorStyle[changeIndex];
