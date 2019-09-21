@@ -2,7 +2,7 @@
   "name": "vscode-stocks-live",
   "displayName": "Stocks - Live Quotes",
   "description": "Watch live stock prices from the VS Code status bar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "ranadeep",
   "repository": {
     "type": "git",
