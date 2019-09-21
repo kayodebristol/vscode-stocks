@@ -168,13 +168,15 @@ async function fetchSymbols(symbols: string[]) {
   });
   let responseObj = {};
   if (symbols_others.length > 0) {
-    const iexCloudAPIKey = vscode.workspace
+    const iexCloudAPIKey: string[] = vscode.workspace
       .getConfiguration()
-      .get('vscode-stocks.iexCloudAPIKey');
+      .get('vscode-stocks.iexCloudAPIKey', ['']);
+
+    const currentIEXCloudAPIKey = randomChoice<string>(iexCloudAPIKey);
 
     let url = `https://cloud.iexapis.com/v1/stock/market/batch?symbols=${symbols_others.join(
       ',',
-    )}&types=quote&token=${iexCloudAPIKey}`;
+    )}&types=quote&token=${currentIEXCloudAPIKey}`;
     let response = await httpGet(url);
     responseObj = JSON.parse(response);
   }
@@ -249,4 +251,8 @@ function arrayEq(arr1: any[], arr2: any[]): boolean {
   if (arr1.length !== arr2.length) return false;
 
   return arr1.every((item, i) => item === arr2[i]);
+}
+
+function randomChoice<T>(items: T[]): T {
+  return items[~~(items.length * Math.random())];
 }

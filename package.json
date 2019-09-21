@@ -3,7 +3,7 @@
   "displayName": "Stocks - Live Quotes",
   "description": "Watch live stock prices from the VS Code status bar",
   "version": "1.0.0",
-  "publisher": "RanadeepPolavarapu",
+  "publisher": "ranadeep",
   "repository": {
     "type": "git",
     "url": "https://github.com/RanadeepPolavarapu/vscode-stocks"
@@ -31,9 +31,9 @@
           "description": "The list of stock symbols to display in the status bar"
         },
         "vscode-stocks.iexCloudAPIKey": {
-          "type": "string",
-          "default": "",
-          "description": "IEXCloud API Key - Please obtain one for free at iexcloud.io - 500,000 req/month rate limit"
+          "type": "array",
+          "default": [],
+          "description": "IEXCloud API Keys - Please obtain at least one for free at iexcloud.io - 500,000 req/month rate limit"
         },
         "vscode-stocks.useColors": {
           "type": "boolean",
