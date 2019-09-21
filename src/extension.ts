@@ -205,7 +205,7 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const symbol = symbolQuote.symbol.toUpperCase();
   const item = items.get(symbol);
   if (!item) return;
-  const price: number = parseInt(symbolQuote.latestPrice, 10);
+  const price: number = parseFloat(symbolQuote.latestPrice);
   const percent: number = parseFloat(symbolQuote.changePercent);
   const change: number = parseFloat(symbolQuote.change);
   const changeArrow: Array<string> = ['↑', '↓', '(unch)'];
