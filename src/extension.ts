@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as https from 'https';
 import * as http from 'http';
 import * as iconv from 'iconv-lite';
+import { DateTime } from 'luxon';
 
 let items: Map<string, vscode.StatusBarItem>;
 export function activate(context: vscode.ExtensionContext) {
@@ -168,11 +169,11 @@ async function fetchSymbols(symbols: string[]) {
   });
   let responseObj = {};
   if (symbols_others.length > 0) {
-    const iexCloudAPIKey: string[] = vscode.workspace
+    const iexCloudAPIKeys: string[] = vscode.workspace
       .getConfiguration()
-      .get('vscode-stocks.iexCloudAPIKey', ['']);
+      .get('vscode-stocks.iexCloudAPIKeys', ['']);
 
-    const currentIEXCloudAPIKey = randomChoice<string>(iexCloudAPIKey);
+    const currentIEXCloudAPIKey = randomChoice<string>(iexCloudAPIKeys);
 
     let url = `https://cloud.iexapis.com/v1/stock/market/batch?symbols=${symbols_others.join(
       ',',
@@ -204,18 +205,45 @@ async function refreshSymbols(symbols: string[]): Promise<void> {
 }
 
 function updateItemWithSymbolQuote(symbolQuote) {
+  const showChangeIndicator: boolean = vscode.workspace
+    .getConfiguration()
+    .get('vscode-stocks.showChangeIndicator', false);
+
+  const MARKET_OPEN_TIME = DateTime.fromObject({
+    hour: 9,
+    minute: 30,
+    zone: 'America/New_York',
+  });
+  const MARKET_CLOSE_TIME = DateTime.fromObject({
+    hour: 16,
+    minute: 0,
+    zone: 'America/New_York',
+  });
+
+  /**
+   * 5 is an ISO weekday of Friday.
+   * @see: https://moment.github.io/luxon/docs/class/src/datetime.js~DateTime.html
+   */
+  const IS_WEEKDAY = DateTime.local().setZone('America/New_York').weekday <= 5;
+  const isMarketOpen: boolean =
+    IS_WEEKDAY &&
+    DateTime.local().setZone('America/New_York') > MARKET_OPEN_TIME &&
+    DateTime.local().setZone('America/New_York') < MARKET_CLOSE_TIME;
+
   const symbol = symbolQuote.symbol.toUpperCase();
   const item = items.get(symbol);
   if (!item) return;
-  const price: number = parseFloat(symbolQuote.latestPrice);
+  const price: number = parseFloat(
+    isMarketOpen ? symbolQuote.latestPrice : symbolQuote.extendedPrice,
+  );
   const percent: number = parseFloat(symbolQuote.changePercent);
   const change: number = parseFloat(symbolQuote.change);
   const changeArrow: Array<string> = ['↑', '↓', '(unch)'];
   const changeIndex = change > 0 ? 0 : change < 0 ? 1 : 2;
 
-  item.text = `${symbol.toUpperCase()}: $${price} ${changeArrow[changeIndex]} ${
-    changeIndex !== 2 ? percent.toFixed(2) : '(unch)'
-  }%`;
+  item.text = `${symbol.toUpperCase()}: $${price} ${
+    showChangeIndicator ? changeArrow[changeIndex] : ''
+  } ${changeIndex !== 2 ? `(${percent.toFixed(2)}` : 'unch'}%)`;
   const config = vscode.workspace.getConfiguration();
   const useColors = config.get('vscode-stocks.useColors', false);
   const colorStyle = config.get('vscode-stocks.colorStyle', [

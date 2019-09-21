@@ -2,7 +2,7 @@
   "name": "vscode-stocks-live",
   "displayName": "Stocks - Live Quotes",
   "description": "Watch live stock prices from the VS Code status bar",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "ranadeep",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
           "default": [],
           "description": "The list of stock symbols to display in the status bar"
         },
-        "vscode-stocks.iexCloudAPIKey": {
+        "vscode-stocks.iexCloudAPIKeys": {
           "type": "array",
           "default": [],
           "description": "IEXCloud API Keys - Please obtain at least one for free at iexcloud.io - 500,000 req/month rate limit"
@@ -49,6 +49,11 @@
           ],
           "description": "The stock quote color style [↑, ↓, -]"
         },
+        "vscode-stocks.showChangeIndicator": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, shows the change indicator arrows."
+        },
         "vscode-stocks.refreshInterval": {
           "type": "number",
           "default": 60000,
@@ -65,6 +70,7 @@
     "vscode:prepublish": "tsc -p ./"
   },
   "devDependencies": {
+    "@types/luxon": "1.15.2",
     "@types/mocha": "5.2.7",
     "@types/node": "12.7.5",
     "mocha": "6.2.0",
@@ -73,6 +79,7 @@
     "vscode": "1.1.36"
   },
   "dependencies": {
-    "iconv-lite": "0.5.0"
+    "iconv-lite": "0.5.0",
+    "luxon": "1.18.0"
   }
 }

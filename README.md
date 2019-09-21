@@ -1,10 +1,14 @@
-# Stocks
+# Stocks - Live Quotes for VSCode
 
-Keep an eye on your stocks while using VS Code, with the "Stocks" extension.
+Keep an eye on your stocks listed on _NYSE_, _NASDAQ_, _AMEX_, _ARCA_, and _BATS_ exchanges while using VS Code, with the "Stocks" extension.
 
 ## Features
 
-Add as many stock symbols as you like to the status bar, and they will be updated every 60 seconds. Just set `vscode-stocks.stockSymbols` to an array of stock symbols to monitor. Example:
+Add as many stock symbols as you like to the status bar, and they will be updated every 60 (default) seconds (this is configurable). Just set `vscode-stocks.stockSymbols` to an array of stock symbols to monitor.
+
+Shows prices during extended trading hours (pre-market and post-market) automatically.
+
+Example:
 
 ```json
 "vscode-stocks.stockSymbols": [
@@ -32,7 +36,7 @@ It can show symbols color-coded by gain/loss with the setting `vscode-stocks.use
     "AAPL",
     "AMZN"
   ],
-  "vscode-stocks.iexCloudAPIKey": [
+  "vscode-stocks.iexCloudAPIKeys": [
     "pk_abc123fakeApiKey"
   ],
   "vscode-stocks.colorStyle": [
@@ -44,9 +48,9 @@ It can show symbols color-coded by gain/loss with the setting `vscode-stocks.use
   "vscode-stocks.refreshInterval": 30000
 ```
 
-## Disclaimer
+# Disclaimer
 
-By reading this, you agree that this is used at your own risk.
+By reading this, you agree that this will be used at your own risk.
 
 Excerpt from IEXCloud Disclaimer (see [IEXCloud Terms](https://iexcloud.io/terms/))
 
