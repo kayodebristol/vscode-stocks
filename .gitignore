@@ -266,3 +266,5 @@ modules.xml
 
 package-lock.json
 yarn.lock
+
+.env
