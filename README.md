@@ -45,6 +45,7 @@ It can show symbols color-coded by gain/loss with the setting `vscode-stocks.use
     "white"
   ],
   "vscode-stocks.useColors": true,
+  "vscode-stocks.showChangeIndicator": true,
   "vscode-stocks.refreshInterval": 30000
 ```
 
