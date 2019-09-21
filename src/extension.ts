@@ -208,7 +208,7 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const price: number = parseInt(symbolQuote.latestPrice, 10);
   const percent: number = parseFloat(symbolQuote.changePercent);
   const change: number = parseFloat(symbolQuote.change);
-  const changeArrow: Array<string> = ['↑', '↓', ''];
+  const changeArrow: Array<string> = ['↑', '↓', '(unch)'];
   const changeIndex = change > 0 ? 0 : change < 0 ? 1 : 2;
 
   item.text = `${symbol.toUpperCase()} $${price} ${
