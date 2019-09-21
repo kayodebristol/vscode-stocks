@@ -219,8 +219,8 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const config = vscode.workspace.getConfiguration();
   const useColors = config.get('vscode-stocks.useColors', false);
   const colorStyle = config.get('vscode-stocks.colorStyle', [
-    '#fd6e70', // red from Yahoo Finance
-    '#6cb33f', // green from Yahoo Finance
+    '#fd6e70', // NASDAQ Red
+    '#6cb33f', // NASDAQ Green
     'white', // unchanged
   ]);
   if (useColors) {
