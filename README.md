@@ -24,15 +24,15 @@ Example:
 ]
 ```
 
-<img src="https://user-images.githubusercontent.com/7084995/65375932-66263400-dc68-11e9-9a2e-f8021ed05305.png">
+<img src="https://raw.githubusercontent.com/ranadeeppolavarapu/vscode-stocks/master/images/example.png">
 
-<img src="https://user-images.githubusercontent.com/7084995/65375933-6a525180-dc68-11e9-8304-3819fda494e2.png">
+<img src="https://raw.githubusercontent.com/ranadeeppolavarapu/vscode-stocks/master/images/example_2.png">
 
-<img src="https://user-images.githubusercontent.com/7084995/65391176-0eed9580-dd34-11e9-8ef5-3474470a1ed4.png">
+<img src="https://raw.githubusercontent.com/ranadeeppolavarapu/vscode-stocks/master/images/yf_example.png">
+
+<img src="https://raw.githubusercontent.com/ranadeeppolavarapu/vscode-stocks/master/images/full_screen_example.png">
 
 It can show symbols color-coded by gain/loss with the setting `vscode-stocks.useColors`.
-
-<img src="https://user-images.githubusercontent.com/7084995/65375963-a4235800-dc68-11e9-9414-a2026a990e84.png">
 
 ## Configurations
 
