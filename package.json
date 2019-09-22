@@ -2,7 +2,7 @@
   "name": "vscode-stocks-live",
   "displayName": "Stocks - Live Quotes",
   "description": "Watch live stock prices from the VS Code status bar",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "ranadeep",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
         "vscode-stocks.stockSymbols": {
           "type": "array",
           "default": [],
-          "description": "The list of stock symbols to display in the status bar"
+          "description": "The list of stock symbols to display in the status bar. Prefix Yahoo Finance symbols with `YF:`. Ex: `YF:GC=F`."
         },
         "vscode-stocks.iexCloudAPIKeys": {
           "type": "array",

@@ -6,6 +6,8 @@ Keep an eye on your stocks listed on _NYSE_, _NASDAQ_, _AMEX_, _ARCA_, and _BATS
 
 Add as many stock symbols as you like to the status bar, and they will be updated every 60 (default) seconds (this is configurable). Just set `vscode-stocks.stockSymbols` to an array of stock symbols to monitor.
 
+Yahoo Finance symbols (indicies, futures, crypto) are supported. Prefix the Yahoo Finance symbols with `YF:`. _Example_: `YF:GC=F` would return Gold futures price. **Note**: It is **HIGHLY** recommended to use a refresh interval of `60000` (_60s_) if you are pulling Yahoo Finance symbols to avoid getting rate limited.
+
 Shows prices during extended trading hours (pre-market and post-market) automatically.
 
 Example:
@@ -15,13 +17,16 @@ Example:
     "GOOG",
     "MSFT",
     "AAPL",
-    "AMZN"
+    "AMZN",
+    "YF:GC=F",
 ]
 ```
 
 <img src="https://user-images.githubusercontent.com/7084995/65375932-66263400-dc68-11e9-9a2e-f8021ed05305.png">
 
 <img src="https://user-images.githubusercontent.com/7084995/65375933-6a525180-dc68-11e9-8304-3819fda494e2.png">
+
+<img src="https://user-images.githubusercontent.com/7084995/65391176-0eed9580-dd34-11e9-8ef5-3474470a1ed4.png">
 
 It can show symbols color-coded by gain/loss with the setting `vscode-stocks.useColors`.
 

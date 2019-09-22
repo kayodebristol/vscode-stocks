@@ -3,8 +3,13 @@ import * as https from 'https';
 import * as http from 'http';
 import * as iconv from 'iconv-lite';
 import { DateTime } from 'luxon';
+import { GeneralUtils } from './general.util';
 
 let items: Map<string, vscode.StatusBarItem>;
+
+const YAHOO_FINANCE_SYMBOL_PREFIX = 'YF';
+let currentIEXCloudAPIKeyIdx: number = 0;
+
 export function activate(context: vscode.ExtensionContext) {
   items = new Map<string, vscode.StatusBarItem>();
   const config = vscode.workspace.getConfiguration();
@@ -36,15 +41,16 @@ function refresh(): void {
 
 function fillEmpty(symbols: string[]): void {
   symbols.forEach((symbol, i) => {
+    const sanitizedSymbol = symbol.replace(new RegExp(`^(YF:)`, 'i'), '');
     // Enforce ordering with priority
     const priority = symbols.length - i;
     const item = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Left,
       priority,
     );
-    item.text = `${symbol}: $…`;
+    item.text = `${sanitizedSymbol}: $…`;
     item.show();
-    items.set(symbol, item);
+    items.set(sanitizedSymbol, item);
   });
 }
 
@@ -157,12 +163,16 @@ async function querySymbolsCN(codes): Promise<Array<Object>> {
 }
 
 const SYMBOL_CN_REGEXP = /^(sh|sz)\d{6}$/i;
+const YAHOO_REGEXP = new RegExp(`^(${YAHOO_FINANCE_SYMBOL_PREFIX}:).+$`, 'i'); // /^(YF:).+$/i;
 async function fetchSymbols(symbols: string[]) {
-  let symbols_cn = [],
-    symbols_others = [];
+  let symbols_cn = [];
+  let symbols_yahoo = [];
+  let symbols_others = [];
   symbols.forEach(symbol => {
     if (SYMBOL_CN_REGEXP.test(symbol)) {
       symbols_cn.push(symbol);
+    } else if (YAHOO_REGEXP.test(symbol)) {
+      symbols_yahoo.push(symbol.replace(new RegExp(`^(YF:)`, 'i'), ''));
     } else {
       symbols_others.push(symbol);
     }
@@ -173,7 +183,12 @@ async function fetchSymbols(symbols: string[]) {
       .getConfiguration()
       .get('vscode-stocks.iexCloudAPIKeys', ['']);
 
-    const currentIEXCloudAPIKey = randomChoice<string>(iexCloudAPIKeys);
+    // Cycle through the API keys for IEXCloud.
+    if (currentIEXCloudAPIKeyIdx > iexCloudAPIKeys.length) {
+      currentIEXCloudAPIKeyIdx = 0;
+    }
+    const currentIEXCloudAPIKey = iexCloudAPIKeys[currentIEXCloudAPIKeyIdx];
+    currentIEXCloudAPIKeyIdx++;
 
     let url = `https://cloud.iexapis.com/v1/stock/market/batch?symbols=${symbols_others.join(
       ',',
@@ -181,12 +196,38 @@ async function fetchSymbols(symbols: string[]) {
     let response = await httpGet(url);
     responseObj = JSON.parse(response);
   }
+  if (symbols_yahoo.length > 0) {
+    for (const yahooSymbol of symbols_yahoo) {
+      let url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?region=US&lang=en-US&includePrePost=true&interval=1m&range=1d`;
+      let respYF = await httpGet(url);
+      let resp = JSON.parse(respYF);
+
+      let latestPriceYF = GeneralUtils.isTruthy(
+        resp.chart.result[0].indicators.quote[0],
+      )
+        ? resp.chart.result[0].indicators.quote[0].close.pop()
+        : resp.chart.result[0].meta.regularMarketPrice;
+      responseObj[yahooSymbol] = {
+        quote: {
+          symbol: resp.chart.result[0].meta.symbol.toUpperCase(),
+          latestPrice: latestPriceYF,
+          extendedPrice: latestPriceYF,
+          changePercent:
+            ((latestPriceYF - resp.chart.result[0].meta.previousClose) /
+              latestPriceYF) *
+            100,
+          change: latestPriceYF - resp.chart.result[0].meta.previousClose,
+        },
+      };
+    }
+  }
   if (symbols_cn.length > 0) {
     let respCN = await querySymbolsCN(symbols_cn);
     respCN.forEach(resp => {
       responseObj[resp['symbol']] = { quote: resp };
     });
   }
+
   return responseObj;
 }
 
@@ -244,6 +285,7 @@ function updateItemWithSymbolQuote(symbolQuote) {
   item.text = `${symbol.toUpperCase()}: $${price} ${
     showChangeIndicator ? changeArrow[changeIndex] : ''
   } ${changeIndex !== 2 ? `(${percent.toFixed(2)}` : 'unch'}%)`;
+
   const config = vscode.workspace.getConfiguration();
   const useColors = config.get('vscode-stocks.useColors', false);
   const colorStyle = config.get('vscode-stocks.colorStyle', [
