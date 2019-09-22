@@ -6,7 +6,9 @@ Keep an eye on your stocks listed on _NYSE_, _NASDAQ_, _AMEX_, _ARCA_, and _BATS
 
 Add as many stock symbols as you like to the status bar, and they will be updated every 60 (default) seconds (this is configurable). Just set `vscode-stocks.stockSymbols` to an array of stock symbols to monitor.
 
-Yahoo Finance symbols (indicies, futures, crypto) are supported. Prefix the Yahoo Finance symbols with `YF:`. _Example_: `YF:GC=F` would return Gold futures price. **Note**: It is **HIGHLY** recommended to use a refresh interval of `60000` (_60s_) if you are pulling Yahoo Finance symbols to avoid getting rate limited.
+Yahoo Finance symbols (indicies, futures, crypto) are supported. Prefix the Yahoo Finance symbols with `YF:`. _Example_: `YF:GC=F` would return Gold futures price.
+
+**NOTE**: It is **HIGHLY** recommended to use a refresh interval of `60000` (_60s_) if you are pulling Yahoo Finance symbols to avoid getting rate limited.
 
 Shows prices during extended trading hours (pre-market and post-market) automatically.
 
