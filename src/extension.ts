@@ -301,9 +301,16 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const symbol = symbolQuote.symbol.toUpperCase();
   const item = items.get(symbol);
   if (!item) return;
-  const price: number = parseFloat(
-    isMarketOpen ? symbolQuote.latestPrice : symbolQuote.extendedPrice,
-  );
+
+  const price = parseFloat(
+    (
+      Math.round(
+        isMarketOpen
+          ? symbolQuote.latestPrice
+          : symbolQuote.extendedPrice * 100,
+      ) / 100
+    ).toString(),
+  ).toFixed(2);
   const percent: number = parseFloat(symbolQuote.changePercent);
   const change: number = parseFloat(symbolQuote.change);
   const changeArrow: Array<string> = ['↑', '↓', '(unch)'];
