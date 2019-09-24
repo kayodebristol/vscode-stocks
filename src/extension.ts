@@ -16,7 +16,33 @@ export function activate(context: vscode.ExtensionContext) {
   const refreshInterval = config.get('vscode-stocks.refreshInterval', 60 * 1e3);
 
   refresh();
-  setInterval(refresh, refreshInterval);
+  setInterval(() => {
+    const PRE_MARKET_OPEN_TIME = DateTime.fromObject({
+      hour: 8,
+      minute: 0,
+      zone: 'America/New_York',
+    });
+    const POST_MARKET_CLOSE_TIME = DateTime.fromObject({
+      hour: 18,
+      minute: 0,
+      zone: 'America/New_York',
+    });
+
+    /**
+     * 5 is an ISO weekday of Friday.
+     * @see: https://moment.github.io/luxon/docs/class/src/datetime.js~DateTime.html
+     */
+    const IS_WEEKDAY =
+      DateTime.local().setZone('America/New_York').weekday <= 5;
+    const SHOULD_REFRESH: boolean =
+      IS_WEEKDAY &&
+      DateTime.local().setZone('America/New_York') > PRE_MARKET_OPEN_TIME &&
+      DateTime.local().setZone('America/New_York') < POST_MARKET_CLOSE_TIME;
+
+    if (SHOULD_REFRESH) {
+      refresh();
+    }
+  }, refreshInterval);
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(refresh),
   );
@@ -241,6 +267,7 @@ async function refreshSymbols(symbols: string[]): Promise<void> {
       updateItemWithSymbolQuote(responseObj[key].quote),
     );
   } catch (e) {
+    console.error('vscode-stocks', e);
     throw new Error(`Invalid response: ${e.message}`);
   }
 }
@@ -310,6 +337,7 @@ function httpGet(url): Promise<string> {
         if (response.statusCode === 200) {
           resolve(responseData);
         } else {
+          console.error('vscode-stocks: httpGet failure...', response);
           reject('fail: ' + response.statusCode);
         }
       });
