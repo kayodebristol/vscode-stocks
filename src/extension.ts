@@ -4,6 +4,7 @@ import * as http from 'http';
 import * as iconv from 'iconv-lite';
 import { DateTime } from 'luxon';
 import { GeneralUtils } from './general.util';
+import idx from 'idx';
 
 let items: Map<string, vscode.StatusBarItem>;
 
@@ -228,10 +229,11 @@ async function fetchSymbols(symbols: string[]) {
       let respYF = await httpGet(url);
       let resp = JSON.parse(respYF);
 
-      let latestPriceYF = GeneralUtils.isTruthy(
-        resp.chart.result[0].indicators.quote[0],
-      )
-        ? resp.chart.result[0].indicators.quote[0].close.pop()
+      let latestClosePrice = idx(resp, _ =>
+        _.resp.chart.result[0].indicators.quote[0].close.pop(),
+      );
+      let latestPriceYF = GeneralUtils.isTruthy(latestClosePrice)
+        ? latestClosePrice
         : resp.chart.result[0].meta.regularMarketPrice;
       responseObj[yahooSymbol] = {
         quote: {
@@ -305,9 +307,8 @@ function updateItemWithSymbolQuote(symbolQuote) {
   const price = parseFloat(
     (
       Math.round(
-        isMarketOpen
-          ? symbolQuote.latestPrice
-          : symbolQuote.extendedPrice * 100,
+        (isMarketOpen ? symbolQuote.latestPrice : symbolQuote.extendedPrice) *
+          100,
       ) / 100
     ).toString(),
   ).toFixed(2);

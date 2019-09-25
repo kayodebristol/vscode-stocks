@@ -2,7 +2,7 @@
   "name": "vscode-stocks-live",
   "displayName": "Stocks - Live Quotes",
   "description": "Watch live stock prices from the VS Code status bar",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "publisher": "ranadeep",
   "repository": {
     "type": "git",
@@ -72,7 +72,7 @@
   "devDependencies": {
     "@types/luxon": "1.15.2",
     "@types/mocha": "5.2.7",
-    "@types/node": "12.7.5",
+    "@types/node": "12.7.7",
     "mocha": "6.2.0",
     "typescript": "3.6.3",
     "vsce": "1.66.0",
@@ -80,6 +80,7 @@
   },
   "dependencies": {
     "iconv-lite": "0.5.0",
-    "luxon": "1.19.0"
+    "idx": "2.5.6",
+    "luxon": "1.19.3"
   }
 }
