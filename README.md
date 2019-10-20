@@ -1,5 +1,8 @@
 # Stocks - Live Quotes for VSCode
 
+[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/ranadeep.vscode-stocks-live?color=brightgreen)](https://marketplace.visualstudio.com/items?itemName=ranadeep.vscode-stocks-live)
+[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/ranadeep.vscode-stocks-live?color=brightgreen)](https://marketplace.visualstudio.com/items?itemName=ranadeep.vscode-stocks-live)
+
 Keep an eye on your stocks listed on _NYSE_, _NASDAQ_, _AMEX_, _ARCA_, and _BATS_ exchanges while using VS Code, with the "Stocks" extension.
 
 ## Features
